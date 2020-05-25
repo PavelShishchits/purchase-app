@@ -1,14 +1,24 @@
 <template>
     <div>
-        <router-link to="/">Home</router-link>
-        <router-link to="/sign-in">Sign In</router-link>
-        <router-link to="/main">Main</router-link>
-        <router-view />
+        <Header :title="title"></Header>
+        <main class="main">
+            <router-view />
+        </main>
     </div>
 </template>
 
 <script>
+    import Header from '@/components/shared/Header';
+
     export default {
-        name: 'simple-layout'
+        name: 'simple-layout',
+        components: {
+            Header
+        },
+        computed: {
+            title() {
+                return this.$route.meta.title;
+            }
+        }
     }
 </script>

@@ -3,7 +3,8 @@
 </template>
 
 <script>
+
     export default {
-        name: 'screen-layout'
+        name: 'screen-layout',
     }
 </script>
