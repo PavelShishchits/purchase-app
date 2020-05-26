@@ -1,8 +1,10 @@
 <template>
     <div>
         <Header :title="title"></Header>
-        <main class="main">
-            <router-view />
+        <main class="main-wrap">
+            <v-container>
+                <router-view />
+            </v-container>
         </main>
     </div>
 </template>
