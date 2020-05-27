@@ -15,4 +15,12 @@ export default new Vuetify({
     icons: {
         iconfont: 'md'
     },
+    // theme: {
+    //     themes: {
+    //         light: {
+    //             success: '#e5e5e5',
+    //             error: '#E57373'
+    //         }
+    //     }
+    // }
 });

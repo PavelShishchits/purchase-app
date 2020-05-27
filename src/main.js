@@ -4,8 +4,13 @@ import './scss/main.scss'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
+
+// plugins
 import vuetify from './plugins/vuetify';
 import './plugins/vuelidate';
+
+// helpers
+import './helpers/index';
 
 Vue.config.productionTip = false
 

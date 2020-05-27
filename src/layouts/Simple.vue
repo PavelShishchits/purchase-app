@@ -1,21 +1,23 @@
 <template>
-    <div>
+    <fragment>
         <Header :title="title"></Header>
-        <main class="main-wrap">
+        <v-content style="padding: 30px 0">
             <v-container>
                 <router-view />
             </v-container>
-        </main>
-    </div>
+        </v-content>
+    </fragment>
 </template>
 
 <script>
     import Header from '@/components/shared/Header';
+    import { Fragment } from 'vue-fragment';
 
     export default {
         name: 'simple-layout',
         components: {
-            Header
+            Header,
+            Fragment
         },
         computed: {
             title() {

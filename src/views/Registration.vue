@@ -1,6 +1,14 @@
 <template>
     <div class="registration-page">
         <v-form @submit.prevent="onSubmit">
+            <form-alert
+                v-if="alert.show"
+                :type="alert.type"
+                :auto-close-time="3000"
+                @close="alert.show = false"
+            >
+               {{ alert.text }}
+            </form-alert>
             <v-row>
                 <v-col cols="12">
                     <form-group :validator="$v.formData.name" name="name">
@@ -88,26 +96,65 @@
                             <v-checkbox
                                 v-bind="attrs"
                                 v-model="formData.terms"
-                                label="I accept the terms and conditions"
                                 @change="$v.formData.terms.$touch()"
-                            ></v-checkbox>
+                            >
+                                <template v-slot:label>
+                                    <span>I accept the <a @click.stop="onTermsClick" ref="termsLink" href="#">terms and conditions</a></span>
+                                </template>
+                            </v-checkbox>
                         </template>
                     </form-group>
                 </v-col>
                 <v-col class="btn-wrap" cols="12">
-                    <v-btn color="primary" type="submit" width="100%" large>Register</v-btn>
+                    <v-btn color="primary" type="submit" block large>Register</v-btn>
+                </v-col>
+                <v-col class="btn-wrap" cols="12">
+                    <v-btn color="primary" @click="fillFields" block large>Fill fields</v-btn>
                 </v-col>
             </v-row>
+            <v-dialog
+                v-model="showTermsModal"
+                width="500"
+            >
+                <v-card>
+                    <v-card-title
+                        class="headline"
+                        primary-title
+                    >Privacy Policy</v-card-title>
+
+                    <v-card-text>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="primary"
+                            text
+                            @click="onModalAccept"
+                        >
+                            I accept
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-form>
     </div>
 </template>
 
 <script>
+    import FormAlert from '@/components/ui/FormAlert';
     import { required, email, sameAs, minLength } from 'vuelidate/lib/validators';
+    import {mapActions} from 'vuex';
 
     export default {
         name: 'Registration',
         props: {},
+        components: {
+            FormAlert
+        },
         data() {
             return {
                 formData: {
@@ -120,7 +167,13 @@
                     terms: ''
                 },
                 showPassword: false,
-                showConfirmPassword: false
+                showConfirmPassword: false,
+                showTermsModal: false,
+                alert: {
+                    type: 'success',
+                    text: '',
+                    show: false
+                }
             }
         },
         validations: {
@@ -148,16 +201,51 @@
                     sameAsPassword: sameAs('password')
                 },
                 terms: {
-                    required
+                    required,
+                    checked: sameAs( () => true )
                 }
             }
         },
         methods: {
+            ...mapActions({
+               signUp: 'auth/signUp'
+            }),
             onSubmit() {
                 this.$v.$touch();
                 if (!this.$v.$invalid) {
-                    console.log(this.formData);
+                    this.signUp({
+                        email: this.formData.email,
+                        password: this.formData.password
+                    })
+                        .then(() => {
+                            this.alert.text = 'Registration done';
+                            this.alert.type = 'success';
+                            this.alert.show = true;
+                        })
+                        .catch((error) => {
+                            this.alert.text = 'Registration failed';
+                            this.alert.type = 'error';
+                            this.alert.show = true;
+                        });
                 }
+            },
+            onModalAccept() {
+                this.showTermsModal = false;
+                if (!this.formData.terms) {
+                    this.formData.terms = true;
+                }
+            },
+            onTermsClick() {
+              this.showTermsModal = true;
+            },
+            fillFields() { // toDo remove
+                this.formData.name = 'Pavel';
+                this.formData.secondName = 'Mew';
+                this.formData.email = 'test@gmail.com';
+                this.formData.relativeEmail = 'test2@gmail.com';
+                this.formData.password = '123456';
+                this.formData.confirmPassword = '123456';
+                this.formData.terms = true;
             }
         }
     }
