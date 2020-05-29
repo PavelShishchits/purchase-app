@@ -37,15 +37,32 @@ export default {
             const now = new Date();
             const expirationDate = new Date(now.getTime() + authData.expiresIn * 1000);
             localStorage.setItem('authData', JSON.stringify({
-                'tokenId': authData.tokenId,
-                'userId': authData.userId,
-                'expirationTime': expirationDate
-            }))
+                'tokenId': authData.idToken,
+                'userId': authData.localId,
+                'expirationTime': expirationDate.getTime()
+            }));
+        },
+        autoLogin({commit}) {
+            const authData = JSON.parse(localStorage.getItem('authData'));
+            if (!authData) {
+                return;
+            }
+            if (new Date().getTime() >= authData.expirationTime) {
+                return;
+            }
+            commit('AUTH_USER', {
+                tokenId: authData.idToken,
+                userId: authData.localId
+            });
         },
         setAutoLogout({commit}, expirationTime) {
             setTimeout(() => {
                 commit('LOG_OUT');
             }, expirationTime * 1000)
+        },
+        logOut({commit}) {
+            commit('LOG_OUT');
+            localStorage.setItem('authData', null);
         }
     },
     getters: {
