@@ -19,8 +19,7 @@
 
 .v-form {
 
-  .btn-wrap {
-
-    margin-top: 20px;
+  .v-btn + .v-btn {
+    margin-top: 15px;
   }
 }

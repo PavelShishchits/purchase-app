@@ -1,10 +1,8 @@
 <template>
-    <v-text-field
-        outlined
-        dense
-        v-bind="$attrs"
+    <v-checkbox
         v-on="$listeners"
-    ></v-text-field>
+        v-bind="$attrs"
+    />
 </template>
 
 <script>
