@@ -1,5 +1,11 @@
 <template>
     <v-form @submit.prevent="onSubmit">
+        <form-alert
+            v-if="alertData.show"
+            :type="alertData.type"
+            :auto-close-time="3000"
+            @close="alertData.show = false"
+        >{{ alertData.text }}</form-alert>
         <v-row>
             <v-col
                cols="12"
@@ -14,19 +20,11 @@
                             :value="formData[field.name]"
                             @input="updateField(field.name, $event)"
                             @blur="triggerFieldValidation(field.name)"
-                        ></component>
-                    </template>
-                </form-group>
-            </v-col>
-            <v-col cols="12">
-                <form-group :validator="$v.formData.terms">
-                    <template slot-scope="{ attrs }">
-                        <CheckboxField
-                            v-bind="attrs"
-                            :value="formData.terms"
-                            label="mew mew"
-                            @change="updateField('terms', $event)"
-                        ></CheckboxField>
+                        >
+                            <template v-slot:label>
+                                <slot :name="field.name"></slot>
+                            </template>
+                        </component>
                     </template>
                 </form-group>
             </v-col>
@@ -42,23 +40,26 @@
     import InputField from "@/components/ui/InputField";
     import PasswordField from "@/components/ui/PasswordField";
     import CheckboxField from "@/components/ui/CheckboxField";
+    import FormAlert from '@/components/ui/FormAlert';
 
     export default {
-        props: ['schema', 'data'],
+        props: ['schema', 'data', 'alert'],
         model: {
             prop: 'data',
             event: 'updateFormData'
         },
         inject: ['$v'],
         components: {
+            FormAlert,
             FormGroup,
             InputField,
             PasswordField,
-            CheckboxField
+            CheckboxField,
         },
         data() {
             return {
-                formData: this.data || {}
+                formData: this.data || {},
+                alertData: this.alert || {}
             }
         },
         methods: {
@@ -72,11 +73,13 @@
             },
             updateField(field, value) {
                 this.$set(this.formData, field, value);
-                // this.triggerFieldValidation(field, value); // toDo remove (needed only for checkbox)
                 // this.$emit('updateFormData', this.formData);
             },
             onSubmit() {
-                this.$emit('submitForm', this.formData);
+                this.$v.$touch();
+                if (!this.$v.$invalid) {
+                    this.$emit('submitForm', this.formData);
+                }
             }
         }
     }

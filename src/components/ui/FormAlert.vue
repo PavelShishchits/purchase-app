@@ -16,9 +16,6 @@
         props: {
             autoCloseTime: Number
         },
-        data() {
-            return {}
-        },
         mounted() {
             if (this.autoCloseTime) {
                 setTimeout(() => {

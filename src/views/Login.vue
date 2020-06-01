@@ -15,7 +15,7 @@
 
 <script>
     import FormGenerator from "@/components/ui/FormGenerator";
-    import {minLength, required, sameAs} from "vuelidate/lib/validators";
+    import {minLength, required} from "vuelidate/lib/validators";
 
     export default {
         name: 'Login',
@@ -41,12 +41,7 @@
                         type: "password",
                         label: "Password",
                         name: "password",
-                    },
-                    // {
-                    //     fieldType: "CheckboxField",
-                    //     label: "Password",
-                    //     name: "terms",
-                    // }
+                    }
                 ],
                 formData: {}
             }
@@ -59,10 +54,6 @@
                 password: {
                     required,
                     minLength: minLength(6)
-                },
-                terms: {
-                    required,
-                    checked: sameAs( () => true )
                 }
             }
         },
