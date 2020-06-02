@@ -1,13 +1,18 @@
 <template>
     <div>
-        Main page
+        <v-btn color="primary" @click="logOut" type="button" block large>LogOut</v-btn>
     </div>
 </template>
 
 <script>
-    // @ is an alias to /src
+    import {mapActions} from 'vuex';
 
     export default {
         name: 'Main',
+        methods: {
+            ...mapActions({
+                logOut: 'auth/logOut'
+            })
+        }
     }
 </script>

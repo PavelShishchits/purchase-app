@@ -14,7 +14,11 @@
 <script>
     export default {
         props: {
-            autoCloseTime: Number
+            autoCloseTime: Number,
+            closeCallback: {
+                type: Function,
+                default: () => {}
+            }
         },
         mounted() {
             if (this.autoCloseTime) {
@@ -26,6 +30,7 @@
         methods: {
             close() {
                 this.$emit('close');
+                this.closeCallback();
             }
         }
     }

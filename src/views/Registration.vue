@@ -109,7 +109,8 @@
                 alert: {
                     type: 'success',
                     text: '',
-                    show: false
+                    show: false,
+                    closeCallback: null
                 },
                 showTermsModal: false
             }
@@ -167,6 +168,9 @@
                         this.alert.text = 'Registration done';
                         this.alert.type = 'success';
                         this.alert.show = true;
+                        this.alert.closeCallback = () => {
+                            this.$router.push('/main');
+                        }
                     })
                     .catch((error) => {
                         this.alert.text = 'Registration failed';

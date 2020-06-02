@@ -3,6 +3,7 @@
         <form-alert
             v-if="alertData.show"
             :type="alertData.type"
+            :closeCallback="alertData.closeCallback"
             :auto-close-time="3000"
             @close="alertData.show = false"
         >{{ alertData.text }}</form-alert>

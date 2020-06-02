@@ -1,9 +1,11 @@
 import Vue from 'vue'
-import store from '@/store/index';
 import VueRouter from 'vue-router'
+import store from '@/store/index'
+
 import Home from '../views/Home.vue'
 import Registration from '../views/Registration.vue'
 import Login from '../views/Login.vue'
+import Main from '../views/Main'
 
 Vue.use(VueRouter)
 
@@ -18,7 +20,7 @@ const routes = [
   },
   {
     path: '/sign-in',
-    name: 'Registration',
+    name: 'Login',
     component: Login,
     meta: {
       layout: 'simple',
@@ -37,9 +39,10 @@ const routes = [
   {
     path: '/main',
     name: 'Main',
-    component: Home,
+    component: Main,
     meta: {
-      layout: 'default'
+      layout: 'default',
+      requireAuth: true
     }
   }
 ]
@@ -48,11 +51,22 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
+});
+
+store.dispatch('auth/autoLogin');
 
 router.beforeEach((to, from, next) => {
   store.commit('setLayout', to.meta.layout || 'default');
+
+  const isAuthenticated = store.getters['auth/isAuthenticated'];
+  if (to.meta.requireAuth && !isAuthenticated) {
+    next({name: 'Home'});
+  }
+  if (!to.meta.requireAuth && isAuthenticated) {
+    next({name: 'Main'})
+  }
+
   next();
 })
 
-export default router
+export default router;

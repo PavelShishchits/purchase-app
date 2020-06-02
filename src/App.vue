@@ -8,7 +8,6 @@
     import DefaultLayout from '@/layouts/Default';
     import SimpleLayout from '@/layouts/Simple';
     import ScreenLayout from '@/layouts/Screen';
-    import {mapActions} from 'vuex';
 
     export default {
         name: 'App',
@@ -21,14 +20,6 @@
             layout() {
                 return this.$store.state.layout;
             }
-        },
-        methods: {
-            ...mapActions({
-                autoLogin: 'auth/autoLogin'
-            })
-        },
-        created() {
-            this.autoLogin();
         }
     };
 </script>
